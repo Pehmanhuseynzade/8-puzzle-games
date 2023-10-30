@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>8-Puzzle Oyunu</title>
+</head>
+<body>
+    <h1>8-Puzzle Oyunu</h1>
+    <div id="puzzle-container">
+        <div class="tile" id="tile-0">1</div>
+        <div class="tile" id="tile-1">2</div>
+        <div class="tile" id="tile-2">3</div>
+        <div class="tile" id="tile-3">4</div>
+        <div class="tile" id="tile-4">5</div>
+        <div class="tile" id="tile-5">6</div>
+        <div class="tile" id="tile-6">7</div>
+        <div class="tile" id="tile-7">8</div>
+        <div class="tile" id="tile-8"></div>
+    </div>
+    <button id="shuffle-button">Karıştır</button>
+    <script>
+        const tiles = document.querySelectorAll('.tile');
+        const shuffleButton = document.getElementById('shuffle-button');
+
+        let tileOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        function shuffleTiles() {
+            for (let i = tileOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [tileOrder[i], tileOrder[j]] = [tileOrder[j], tileOrder[i]];
+            }
+            updateTilePositions();
+        }
+
+        function updateTilePositions() {
+            tiles.forEach((tile, index) => {
+                if (tileOrder[index] === 8) {
+                    tile.textContent = '';
+                } else {
+                    tile.textContent = tileOrder[index] + 1;
+                }
+            });
+        }
+
+        tiles.forEach((tile, index) => {
+            tile.addEventListener('click', () => {
+                if (canMove(index)) {
+                    const emptyIndex = tileOrder.indexOf(8);
+                    [tileOrder[index], tileOrder[emptyIndex]] = [tileOrder[emptyIndex], tileOrder[index]];
+                    updateTilePositions();
+                }
+            });
+        });
+
+        function canMove(index) {
+            const emptyIndex = tileOrder.indexOf(8);
+            return (
+                (index === emptyIndex - 1 && emptyIndex % 3 !== 0) ||
+                (index === emptyIndex + 1 && index % 3 !== 0) ||
+                index === emptyIndex - 3 ||
+                index === emptyIndex + 3
+            );
+        }
+
+        shuffleTiles();
+
+        shuffleButton.addEventListener('click', shuffleTiles);
+    </script>
+</body>
+</html>
